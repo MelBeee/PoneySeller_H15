@@ -5,11 +5,11 @@ using System.Web;
 
 namespace PoneySeller.Models
 {
-   public class ImageModel
-   {
-      public int IDImage { get; set; }
+    public class Jumbotron
+    {
+        public int IDImage { get; set; }
 
-      public ImageModel()
+      public Jumbotron()
       {
          IDImage = 1;
          Refresh();
@@ -28,5 +28,5 @@ namespace PoneySeller.Models
 
          return math;
       }
-   }
+    }
 }

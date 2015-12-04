@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@model PoneySeller.Models.Jumbotron
+
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -37,16 +39,33 @@
             </div>
         </div>
     </div>
+    <div id="image">
+        @{Html.RenderPartial("_Jumbotron", Model);}
+    </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+    var timer;
+    function ChargeVuePartielle() {
+        $.ajax({
+            url: '@Url.Action("_Jumbotron")',
+            type: 'GET',
+            dataType: 'html',
+            success: function (result) {
+                $('#image').html(result);
+            }
+        });
+    }
+
+    ChargeVuePartielle();
+    $(function () {
+        timer = window.setInterval("ChargeVuePartielle()", 5000);
+    });
+    </script>
 </body>
 </html>

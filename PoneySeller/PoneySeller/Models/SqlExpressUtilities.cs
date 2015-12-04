@@ -536,10 +536,19 @@ namespace SqlExpressUtilities
                     {
                         id = reader.GetInt32(0);
                     }
+                    else
+                    {
+                        id = 0;
+                    }
                     EndQuerySQL();
                 }
             }
             return id;
+        }
+
+        public virtual int ExecuteCommandIntReturn(string sqlcommand)
+        {
+            return NonQuerySQL(sqlcommand); 
         }
     }
 

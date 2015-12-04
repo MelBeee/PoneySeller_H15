@@ -5,8 +5,10 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.SqlClient;
 using PoneySeller.Controllers;
+using PoneySeller.Models;
 using System.IO;
-using System.Collections.Generic;
+using System.Dynamic;
+using PoneySeller.Class;
 
 namespace PoneySeller.Controllers
 {
@@ -14,21 +16,21 @@ namespace PoneySeller.Controllers
     {
         public ActionResult Index()
         {
-            return View(new PoneySeller.Models.ImageModel());
+            return View(new PoneySeller.Models.Jumbotron());
         }
 
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
 
-            return View();
+            return View(new PoneySeller.Models.Jumbotron());
         }
 
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
 
-            return View();
+            return View(new PoneySeller.Models.Jumbotron());
         }
 
         public ActionResult Deconnection()
@@ -90,7 +92,7 @@ namespace PoneySeller.Controllers
                 }
             }
 
-            return View(new PoneySeller.Models.ImageModel());
+            return View(new PoneySeller.Models.Jumbotron());
         }
 
         private bool EnvoyerLeEmail(string TB_Username, PoneySeller.Models.Users unUser)
@@ -161,19 +163,28 @@ namespace PoneySeller.Controllers
                 ViewBag.ErrorTBVide = "Tout les champs doivent être remplis";
                 inscriptionreussite = false;
             }
-            PoneySeller.Models.User unUsager = new Models.User(TB_FullName, TB_Adresse, TB_Ville, TB_Telephone, TB_Password, TB_Email);
+            
             if (inscriptionreussite && TextBoxRempli)
             {
-                desUsagers.usager = unUsager;
-                desUsagers.Insert();
-                return RedirectToAction("Index", "Home");
+                int dernierid = desUsagers.GetDernierID("usagers") + 1;
+                string sqlcommand = "insert into usagers (id, nomcomplet, password, adresse, ville, telephone, email) values (" 
+                                  + dernierid.ToString() + ", '" + TB_FullName + "','" + TB_Password + "','" + TB_Adresse 
+                                  + "','" + TB_Ville + "','" + TB_Telephone + "','" + TB_Email + "')";
+                if (desUsagers.ExecuteCommandIntReturn(sqlcommand) > 0)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ViewBag.NonReussi = "Inscription non reussite";
+                }
             }
-            return View(unUsager);
+            return View(new PoneySeller.Models.Jumbotron());
         }
 
         public ActionResult Inscription()
         {
-            return View(new PoneySeller.Models.ImageModel());
+            return View(new PoneySeller.Models.Jumbotron());
         }
     }
 }

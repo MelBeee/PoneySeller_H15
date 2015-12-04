@@ -57,12 +57,5 @@ namespace PoneySeller.Models
         {
             return base.TrouverPassword(email);
         }
-
-        public override void Insert()
-        {
-            SetTableName("usagers");
-            
-            base.Insert();
-        }
     } 
 }
