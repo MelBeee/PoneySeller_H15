@@ -1,9 +1,20 @@
 ﻿@model PoneySeller.Models.Jumbotron
 
+@functions
+{
+    public string[,] GetChevaux()
+    {
+        PoneySeller.Models.Users desUsagers = new PoneySeller.Models.Users(Session["MyPonies"]);
+        string username = (string)Session["Username"];
+        string[,] tab = desUsagers.GetChevaux(username);
+        return tab;
+    }
+}
+
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Mon application ASP.NET</title>
@@ -24,17 +35,33 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Accueil", "Index", "Home")</li>
-                    @if(Session["Username"] != "")
+                    @if (Session["Username"] != "")
                     {
-                        <li>@Html.ActionLink("Deconnection", "Deconnection", "Home")</li>    
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Gestion
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Nouveau cheval", "Gestion", "Gestion")</li>
+                                @{
+                        string[,] tab = GetChevaux();
+                        if (tab.Length > 0)
+                        {
+                            for (int i = 0; i < tab.Length; i++)
+                            {
+                                <li>@Html.ActionLink(tab[i, 0], "Gestion", "Gestion", new { _idcheval = tab[i, 1] }, new { @id = "cheval" + i, @value = tab[i,0] })</li>
+                            }
+                        }
+                                }
+                            </ul>
+                        </li>
+                        <li>@Html.ActionLink("Deconnection", "Deconnection", "Home")</li>
                     }
                     else
                     {
                         <li>@Html.ActionLink("Inscription", "Inscription", "Home")</li>
                     }
-                    <li>@Html.ActionLink("À propos de", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-
                 </ul>
             </div>
         </div>
@@ -50,22 +77,22 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     <script type="text/javascript">
-    var timer;
-    function ChargeVuePartielle() {
-        $.ajax({
-            url: '@Url.Action("_Jumbotron")',
-            type: 'GET',
-            dataType: 'html',
-            success: function (result) {
-                $('#image').html(result);
-            }
-        });
-    }
+        var timer;
+        function ChargeVuePartielle() {
+            $.ajax({
+                url: '@Url.Action("_Jumbotron")',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    $('#image').html(result);
+                }
+            });
+        }
 
-    ChargeVuePartielle();
-    $(function () {
-        timer = window.setInterval("ChargeVuePartielle()", 5000);
-    });
+        ChargeVuePartielle();
+        $(function () {
+            timer = window.setInterval("ChargeVuePartielle()", 5000);
+        });
     </script>
 </body>
 </html>

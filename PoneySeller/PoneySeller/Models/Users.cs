@@ -42,20 +42,5 @@ namespace PoneySeller.Models
         {
             usager = new User(); 
         }
-
-        public override bool VerifierSiEmailExiste(string email)
-        {
-            return base.VerifierSiEmailExiste(email);
-        }
-
-        public override bool VerifierConnection(string email, string password)
-        {
-            return base.VerifierConnection(email, password);
-        }
-
-        public override string TrouverPassword(string email)
-        {
-            return base.TrouverPassword(email);
-        }
     } 
 }

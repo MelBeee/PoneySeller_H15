@@ -19,20 +19,6 @@ namespace PoneySeller.Controllers
             return View(new PoneySeller.Models.Jumbotron());
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View(new PoneySeller.Models.Jumbotron());
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View(new PoneySeller.Models.Jumbotron());
-        }
-
         public ActionResult Deconnection()
         {
             Session["UserValid"] = false;
@@ -73,7 +59,7 @@ namespace PoneySeller.Controllers
                     envoitreussi = false;
                     ViewBag.ErreurVide = "Tout les champs doivent être remplis";
                 }
-                if (!desUsagers.VerifierSiEmailExiste(TB_Username))
+                if (desUsagers.ExecuteCommandBoolReturn("SELECT * FROM USAGERS WHERE EMAIL ='" + TB_Username + "'"))
                 {
                     envoitreussi = false;
                     ViewBag.ErreurUsername = "Informations invalides.";
@@ -149,7 +135,7 @@ namespace PoneySeller.Controllers
                 ViewBag.ErrorEmail = "Les emails doivent correspondre";
                 inscriptionreussite = false;
             }
-            if (desUsagers.VerifierSiEmailExiste(TB_Email))
+            if (desUsagers.ExecuteCommandBoolReturn("SELECT * FROM USAGERS WHERE EMAIL ='" + TB_Email + "'"))
             {
                 ViewBag.NomUtilise = "Email deja utilisé";
                 inscriptionreussite = false;

@@ -77,6 +77,7 @@ namespace SqlExpressUtilities
             this.connexionString = connexionString.ToString();
             SQLTableName = this.GetType().Name;
         }
+
         public SqlExpressWrapper()
         {
         }
@@ -490,14 +491,38 @@ namespace SqlExpressUtilities
             return password;
         }
 
-        public virtual bool VerifierSiEmailExiste(string email)
+        //public int GetID(string email)
+        //{
+        //    int id = 0;
+        //    using (connection = new SqlConnection(connexionString))
+        //    {
+        //        // bâtir l'objet de requête
+        //        using (SqlCommand sqlcmd = new SqlCommand("SELECT id from usagers where email = '" + email + "'"))
+        //        {
+        //            // affecter l'objet de connection à l'objet de requête
+        //            sqlcmd.Connection = connection;
+        //            // ouvrir la connection avec la bd
+        //            connection.Open();
+        //            // éxécuter la requête SQL et récupérer les enregistrements qui en découlent dans l'objet Reader
+        //            reader = sqlcmd.ExecuteReader();
+
+        //            if (reader.Read())
+        //            {
+        //                id = reader.GetInt32(0);
+        //            }
+        //            EndQuerySQL();
+        //        }
+        //    }
+        //    return id;
+        //}
+
+        public virtual string[,] GetChevaux(string username)
         {
-            bool existe = false;
-            // instancier l'objet de collection
+            string[,] unTableau = new string[0,2];
             using (connection = new SqlConnection(connexionString))
             {
                 // bâtir l'objet de requête
-                using (SqlCommand sqlcmd = new SqlCommand("SELECT * FROM USAGERS WHERE EMAIL ='" + email + "'"))
+                using (SqlCommand sqlcmd = new SqlCommand("select nom, id from chevaux where idProprio = (select id from usagers where email = '" + username + "')"))
                 {
                     // affecter l'objet de connection à l'objet de requête
                     sqlcmd.Connection = connection;
@@ -506,14 +531,31 @@ namespace SqlExpressUtilities
                     // éxécuter la requête SQL et récupérer les enregistrements qui en découlent dans l'objet Reader
                     reader = sqlcmd.ExecuteReader();
 
-                    if (reader.Read())
+                    int nombreresultat = 0;
+                    while (reader.Read())
                     {
-                        existe = true;
+                        nombreresultat++;
+                    }
+                    string[,] Tab = new string[nombreresultat,2];
+
+                    if (nombreresultat > 0)
+                    {
+                        SqlDataReader sqlDR2 = sqlcmd.ExecuteReader();
+                        int cpt = 0;
+                        while (sqlDR2.Read())
+                        {
+                            Tab[cpt, 0] = sqlDR2.GetString(0); 
+                            Tab[cpt, 1] = sqlDR2.GetInt32(1).ToString();
+                            cpt++;
+                        }
+                        sqlDR2.Close();
+
+                        return Tab;
                     }
                     EndQuerySQL();
                 }
             }
-            return existe;
+            return unTableau;
         }
 
         public virtual int GetDernierID(string table)
@@ -546,9 +588,68 @@ namespace SqlExpressUtilities
             return id;
         }
 
+        public virtual string[] GetInfoChevaux(int ID)
+        {
+            string[] unTableau = new string[6];
+            using (connection = new SqlConnection(connexionString))
+            {
+                // bâtir l'objet de requête
+                using (SqlCommand sqlcmd = new SqlCommand(" SELECT C.nom, C.age, C.sexe, C.prix, R.description, C.photo " +
+                                                            " FROM CHEVAUX C INNER JOIN RACE R ON R.ID = C.IDRace " +
+                                                            " where C.id =" + ID))
+                {
+                    // affecter l'objet de connection à l'objet de requête
+                    sqlcmd.Connection = connection;
+                    // ouvrir la connection avec la bd
+                    connection.Open();
+                    // éxécuter la requête SQL et récupérer les enregistrements qui en découlent dans l'objet Reader
+                    reader = sqlcmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        unTableau[0] = reader.GetString(0);
+                        unTableau[1] = reader.GetInt32(1).ToString();
+                        unTableau[2] = reader.GetString(2);
+                        unTableau[3] = reader.GetString(3);
+                        unTableau[4] = reader.GetInt32(4).ToString();
+                        unTableau[5] = reader.GetString(5);
+                    }
+                    EndQuerySQL();
+                }
+            }
+
+            return unTableau;
+        }
+
         public virtual int ExecuteCommandIntReturn(string sqlcommand)
         {
             return NonQuerySQL(sqlcommand); 
+        }
+
+        public virtual bool ExecuteCommandBoolReturn(string sqlcommand)
+        {
+            bool existe = false;
+            // instancier l'objet de collection
+            using (connection = new SqlConnection(connexionString))
+            {
+                // bâtir l'objet de requête
+                using (SqlCommand sqlcmd = new SqlCommand(sqlcommand))
+                {
+                    // affecter l'objet de connection à l'objet de requête
+                    sqlcmd.Connection = connection;
+                    // ouvrir la connection avec la bd
+                    connection.Open();
+                    // éxécuter la requête SQL et récupérer les enregistrements qui en découlent dans l'objet Reader
+                    reader = sqlcmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        existe = true;
+                    }
+                    EndQuerySQL();
+                }
+            }
+            return existe;
         }
     }
 
