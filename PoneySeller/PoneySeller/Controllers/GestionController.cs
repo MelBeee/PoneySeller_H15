@@ -9,7 +9,7 @@ namespace PoneySeller.Controllers
 {
     public class GestionController : Controller
     {
-        public ActionResult Gestion(int? _idcheval) 
+        public ActionResult Gestion(int? _idcheval)
         {
             ViewBag.Update = "non";
             PoneySeller.Models.Users desUsagers = new PoneySeller.Models.Users(Session["MyPonies"]);
@@ -45,10 +45,50 @@ namespace PoneySeller.Controllers
             return View(new PoneySeller.Models.Jumbotron());
         }
 
-        [HttpPost] 
-        public ActionResult Gestion(String TB_Nom, String TB_Age, String TB_Sexe, String TB_Prix, String rad1, HttpPostedFileBase FileUpload1, String TB_Update, String TB_IDCheval)
+        [HttpPost]
+        public ActionResult Gestion(String TB_Nom, String TB_Age, String RB_Sexe, String TB_Prix, HttpPostedFileBase FileUpload1, String TB_Update, String TB_IDCheval,
+                                    String CB_Discipline)
         {
+            if (TB_Nom != "" && TB_Age != "" && RB_Sexe != "" && TB_Prix != "" && CB_Discipline != "")
+            {
+                string commandesql = "";
+                if (TB_Update == "non")
+                {
+                    if (ExecuteCommande(commandesql))
+                    {
+                        ViewBag.Reussi = "Cheval ajouté !";
+                    }
+                    else
+                    {
+                        ViewBag.NonReussi = "Erreur dans l'enregistrement du cheval !";
+                    }
+                }
+                else
+                {
+                    if (ExecuteCommande(commandesql))
+                    {
+                        ViewBag.Reussi = "Cheval Modifié !";
+                    }
+                    else
+                    {
+                        ViewBag.NonReussi = "Erreur dans la modifcation du cheval !";
+                    }
+                }
+            }
+            else
+            {
+                ViewBag.ErreurVide = "Tout les champs doivent être remplis et au moins une photo doit être choisi.";
+            }
+
             return View(new PoneySeller.Models.Jumbotron());
         }
-	}
+
+        bool ExecuteCommande(string cmd)
+        {
+
+
+
+            return true;
+        }
+    }
 }
