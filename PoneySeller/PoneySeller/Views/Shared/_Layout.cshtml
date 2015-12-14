@@ -35,6 +35,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Accueil", "Index", "Home")</li>
+                    
                     @if (Session["Username"] != "")
                     {
                         <li class="dropdown">
@@ -56,6 +57,7 @@
                                 }
                             </ul>
                         </li>
+                        <li>@Html.ActionLink("Profil", "Profil", "Gestion")</li>
                         <li>@Html.ActionLink("Deconnection", "Deconnection", "Home")</li>
                     }
                     else

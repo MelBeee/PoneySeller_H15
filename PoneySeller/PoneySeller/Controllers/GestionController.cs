@@ -7,8 +7,59 @@ using System.Web.Mvc;
 
 namespace PoneySeller.Controllers
 {
+    
+
     public class GestionController : Controller
     {
+       
+
+        [HttpPost]
+        public ActionResult Profil(String TB_Fullname, String TB_Adresse, String TB_Ville, String TB_Telephone, String TB_Password, String TB_PasswordConfirm)
+        {
+            PoneySeller.Models.Users desUsagers = new PoneySeller.Models.Users(Session["MyPonies"]);
+            desUsagers.SQLTableName = "Usagers";
+
+            desUsagers.SelectByFieldName("Email", Session["Username"].ToString());
+
+            desUsagers.Next();
+
+            if (TB_Fullname != "" && TB_Adresse != "" && TB_Ville != "" && TB_Telephone != "" && TB_Password != "" && TB_PasswordConfirm != "")
+            {
+                desUsagers.usager.NomComplet = TB_Fullname;
+                desUsagers.usager.Adresse = TB_Adresse;
+                desUsagers.usager.Ville = TB_Ville;
+                desUsagers.usager.Telephone = TB_Telephone;
+                desUsagers.usager.Password = TB_Password;
+
+                desUsagers.Update();
+            }
+            else
+            {
+                ViewBag.ErreurVide = "Tout les champs doivent être remplis et au moins une photo doit être choisi.";
+            }
+            return View(new PoneySeller.Models.Jumbotron());
+        }
+
+        public ActionResult Profil()
+        {
+            PoneySeller.Models.Users desUsagers = new PoneySeller.Models.Users(Session["MyPonies"]);
+            desUsagers.SQLTableName = "Usagers";
+           
+            desUsagers.SelectByFieldName("Email", Session["Username"].ToString());     
+          
+            desUsagers.Next();
+
+            ModelState.SetModelValue("TB_Fullname", new ValueProviderResult(desUsagers.usager.NomComplet, string.Empty, new CultureInfo("en-US")));
+            ModelState.SetModelValue("TB_Adresse", new ValueProviderResult(desUsagers.usager.Adresse, string.Empty, new CultureInfo("en-US")));
+            ModelState.SetModelValue("TB_Ville", new ValueProviderResult(desUsagers.usager.Ville, string.Empty, new CultureInfo("en-US")));
+            ModelState.SetModelValue("TB_Telephone", new ValueProviderResult(desUsagers.usager.Telephone, string.Empty, new CultureInfo("en-US")));
+            ModelState.SetModelValue("TB_Password", new ValueProviderResult(desUsagers.usager.Password, string.Empty, new CultureInfo("en-US")));
+            ModelState.SetModelValue("TB_PasswordConfirm", new ValueProviderResult(desUsagers.usager.Password, string.Empty, new CultureInfo("en-US")));
+
+            return View(new PoneySeller.Models.Jumbotron());
+        }
+
+
         public ActionResult Gestion(int? _idcheval)
         {
             ViewBag.Update = "non";
