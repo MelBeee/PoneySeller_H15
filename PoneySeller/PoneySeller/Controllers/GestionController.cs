@@ -107,14 +107,17 @@ namespace PoneySeller.Controllers
 
         [HttpPost]
         public ActionResult Gestion(String TB_Nom, String TB_Age, String RB_Sexe, String TB_Prix, HttpPostedFileBase FileUpload1, String TB_Update, String TB_IDCheval,
-                                    String CB_Discipline)
+                                    String CB_Discipline, String TB_Race)
         {
-            if (TB_Nom != "" && TB_Age != "" && RB_Sexe != "" && TB_Prix != "" && CB_Discipline != "")
+            if (TB_Nom != "" && TB_Age != "" && RB_Sexe != "" && TB_Prix != "" && CB_Discipline != "" && TB_Race != "")
             {
                 string commandesql = "";
                 if (TB_Update == "non")
                 {
-                    if (ExecuteCommande(commandesql))
+                    PoneySeller.Models.Users desUsagers = new PoneySeller.Models.Users(Session["MyPonies"]);
+                    int IDProprio = desUsagers.GetID(Session["Username"].ToString());
+                    commandesql = "insert into chevaux (nom, race, prix, sexe, idproprio, photoguid) values ( '" + TB_Nom + "', '" + TB_Race + "', '" + TB_Prix + "', '" + RB_Sexe + "', " + IDProprio + ", '" + FileUpload1.FileName.ToString() + "')";
+                    if (ExecuteCommande(commandesql) > 0)
                     {
                         ViewBag.Reussi = "Cheval ajouté !";
                     }
@@ -125,7 +128,12 @@ namespace PoneySeller.Controllers
                 }
                 else
                 {
-                    if (ExecuteCommande(commandesql))
+                    commandesql = "update chevaux set nom = '"      + TB_Nom    + "', " +
+                                                     "race = '"   + TB_Race   + "', " +
+                                                     "prix = '"     + TB_Prix   + "', " +
+                                                     "sexe = '"     + RB_Sexe   + "'" + 
+                                                     "where ID = " + TB_IDCheval;
+                    if (ExecuteCommande(commandesql) > 0)
                     {
                         ViewBag.Reussi = "Cheval Modifié !";
                     }
@@ -143,12 +151,14 @@ namespace PoneySeller.Controllers
             return View(new PoneySeller.Models.Jumbotron());
         }
 
-        bool ExecuteCommande(string cmd)
+        int ExecuteCommande(string cmd)
         {
+            int LigneModifie = 0;
+            PoneySeller.Models.Users desUsagers = new PoneySeller.Models.Users(Session["MyPonies"]);
 
+            LigneModifie = desUsagers.ExecuteCommandIntReturn(cmd);
 
-
-            return true;
+            return LigneModifie;
         }
     }
 }

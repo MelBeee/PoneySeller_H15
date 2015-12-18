@@ -311,6 +311,8 @@ namespace SqlExpressUtilities
             return false;
         }
 
+
+
         public bool SelectLast()
         {
             string sql = "SELECT TOP 1 * FROM " + SQLTableName + " ORDER BY ID DESC";
@@ -491,30 +493,30 @@ namespace SqlExpressUtilities
             return password;
         }
 
-        //public int GetID(string email)
-        //{
-        //    int id = 0;
-        //    using (connection = new SqlConnection(connexionString))
-        //    {
-        //        // bâtir l'objet de requête
-        //        using (SqlCommand sqlcmd = new SqlCommand("SELECT id from usagers where email = '" + email + "'"))
-        //        {
-        //            // affecter l'objet de connection à l'objet de requête
-        //            sqlcmd.Connection = connection;
-        //            // ouvrir la connection avec la bd
-        //            connection.Open();
-        //            // éxécuter la requête SQL et récupérer les enregistrements qui en découlent dans l'objet Reader
-        //            reader = sqlcmd.ExecuteReader();
+        public virtual int GetID(string email)
+        {
+            int id = 0;
+            using (connection = new SqlConnection(connexionString))
+            {
+                // bâtir l'objet de requête
+                using (SqlCommand sqlcmd = new SqlCommand("SELECT id from usagers where email = '" + email + "'"))
+                {
+                    // affecter l'objet de connection à l'objet de requête
+                    sqlcmd.Connection = connection;
+                    // ouvrir la connection avec la bd
+                    connection.Open();
+                    // éxécuter la requête SQL et récupérer les enregistrements qui en découlent dans l'objet Reader
+                    reader = sqlcmd.ExecuteReader();
 
-        //            if (reader.Read())
-        //            {
-        //                id = reader.GetInt32(0);
-        //            }
-        //            EndQuerySQL();
-        //        }
-        //    }
-        //    return id;
-        //}
+                    if (reader.Read())
+                    {
+                        id = reader.GetInt32(0);
+                    }
+                    EndQuerySQL();
+                }
+            }
+            return id;
+        }
 
         public virtual string[,] GetChevaux(string username)
         {
@@ -537,6 +539,7 @@ namespace SqlExpressUtilities
                         nombreresultat++;
                     }
                     string[,] Tab = new string[nombreresultat,2];
+                    reader.Close();
 
                     if (nombreresultat > 0)
                     {

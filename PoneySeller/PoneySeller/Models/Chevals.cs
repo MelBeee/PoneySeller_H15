@@ -9,17 +9,17 @@ namespace PoneySeller.Models
     { 
         public int ID { get; set; }
         public string Nom { get; set; }
-        public string IDRace { get; set; }
+        public string Race { get; set; }
         public string Prix { get; set; }
         public string Sexe { get; set; }
         public string IDProprio { get; set; }
 
          public Cheval() { }
 
-         public Cheval(string sNom, string sIDRace, string sPrix, string sSexe, string sIDProprio) 
+         public Cheval(string sNom, string sRace, string sPrix, string sSexe, string sIDProprio) 
          {
              Nom = sNom;
-             IDRace = sIDRace;
+             Race = sRace;
              Prix = sPrix;
              Sexe = sSexe;
              IDProprio = sIDProprio;           
