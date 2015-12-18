@@ -107,18 +107,18 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Recherche\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\GestionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RechercheController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Chevals.cs" />
     <Compile Include="Models\Email.cs" />
     <Compile Include="Models\ImageGUIDReference.cs" />
     <Compile Include="Models\Jumbotron.cs" />
@@ -162,6 +162,7 @@
     <Content Include="Views\Shared\_Jumbotron.cshtml" />
     <Content Include="Views\Gestion\Gestion.cshtml" />
     <Content Include="Views\Gestion\Profil.cshtml" />
+    <Content Include="Views\Recherche\Recherche.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

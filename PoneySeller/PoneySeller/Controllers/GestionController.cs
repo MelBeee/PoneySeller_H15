@@ -32,6 +32,8 @@ namespace PoneySeller.Controllers
                 desUsagers.usager.Password = TB_Password;
 
                 desUsagers.Update();
+
+                ViewBag.UpdateSuccess = "Votre compte a été modifier";
             }
             else
             {
@@ -42,21 +44,28 @@ namespace PoneySeller.Controllers
 
         public ActionResult Profil()
         {
-            PoneySeller.Models.Users desUsagers = new PoneySeller.Models.Users(Session["MyPonies"]);
-            desUsagers.SQLTableName = "Usagers";
+            if ((bool)Session["UserValid"])
+            {
+                PoneySeller.Models.Users desUsagers = new PoneySeller.Models.Users(Session["MyPonies"]);
+                desUsagers.SQLTableName = "Usagers";
            
-            desUsagers.SelectByFieldName("Email", Session["Username"].ToString());     
+                desUsagers.SelectByFieldName("Email", Session["Username"].ToString());     
           
-            desUsagers.Next();
+                desUsagers.Next();
 
-            ModelState.SetModelValue("TB_Fullname", new ValueProviderResult(desUsagers.usager.NomComplet, string.Empty, new CultureInfo("en-US")));
-            ModelState.SetModelValue("TB_Adresse", new ValueProviderResult(desUsagers.usager.Adresse, string.Empty, new CultureInfo("en-US")));
-            ModelState.SetModelValue("TB_Ville", new ValueProviderResult(desUsagers.usager.Ville, string.Empty, new CultureInfo("en-US")));
-            ModelState.SetModelValue("TB_Telephone", new ValueProviderResult(desUsagers.usager.Telephone, string.Empty, new CultureInfo("en-US")));
-            ModelState.SetModelValue("TB_Password", new ValueProviderResult(desUsagers.usager.Password, string.Empty, new CultureInfo("en-US")));
-            ModelState.SetModelValue("TB_PasswordConfirm", new ValueProviderResult(desUsagers.usager.Password, string.Empty, new CultureInfo("en-US")));
+                ModelState.SetModelValue("TB_Fullname", new ValueProviderResult(desUsagers.usager.NomComplet, string.Empty, new CultureInfo("en-US")));
+                ModelState.SetModelValue("TB_Adresse", new ValueProviderResult(desUsagers.usager.Adresse, string.Empty, new CultureInfo("en-US")));
+                ModelState.SetModelValue("TB_Ville", new ValueProviderResult(desUsagers.usager.Ville, string.Empty, new CultureInfo("en-US")));
+                ModelState.SetModelValue("TB_Telephone", new ValueProviderResult(desUsagers.usager.Telephone, string.Empty, new CultureInfo("en-US")));
+                ModelState.SetModelValue("TB_Password", new ValueProviderResult(desUsagers.usager.Password, string.Empty, new CultureInfo("en-US")));
+                ModelState.SetModelValue("TB_PasswordConfirm", new ValueProviderResult(desUsagers.usager.Password, string.Empty, new CultureInfo("en-US")));
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
-            return View(new PoneySeller.Models.Jumbotron());
+            return View(new PoneySeller.Models.Jumbotron());           
         }
 
 

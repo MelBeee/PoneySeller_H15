@@ -48,6 +48,10 @@
                                     @Html.TextBox("TB_PasswordConfirm", null, new { maxlength = 20, @class = "form-control", @placeholder = "Confirmation du mot de passe", @Type = "password" })
                                 </div>                              
                                 <input type="submit" id="btn_login" class="btn btn-custom btn-lg btn-block" value="Modifier">
+                                @if (ViewBag.UpdateSuccess != "")
+                                {
+                                    <label style="color: green; font-size: 15px;">@ViewBag.UpdateSuccess</label>
+                                }
                             </form>
                         </div>
                     </div>
