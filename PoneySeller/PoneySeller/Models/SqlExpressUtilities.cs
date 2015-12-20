@@ -561,44 +561,14 @@ namespace SqlExpressUtilities
             return unTableau;
         }
 
-        public virtual int GetDernierID(string table)
-        {
-            int id = 0;
-            // instancier l'objet de collection
-            using (connection = new SqlConnection(connexionString))
-            {
-                // bâtir l'objet de requête
-                using (SqlCommand sqlcmd = new SqlCommand("SELECT max(ID) FROM " + table))
-                {
-                    // affecter l'objet de connection à l'objet de requête
-                    sqlcmd.Connection = connection;
-                    // ouvrir la connection avec la bd
-                    connection.Open();
-                    // éxécuter la requête SQL et récupérer les enregistrements qui en découlent dans l'objet Reader
-                    reader = sqlcmd.ExecuteReader();
-
-                    if (reader.Read())
-                    {
-                        id = reader.GetInt32(0);
-                    }
-                    else
-                    {
-                        id = 0;
-                    }
-                    EndQuerySQL();
-                }
-            }
-            return id;
-        }
-
         public virtual string[] GetInfoChevaux(int ID)
         {
             string[] unTableau = new string[6];
             using (connection = new SqlConnection(connexionString))
             {
                 // bâtir l'objet de requête
-                using (SqlCommand sqlcmd = new SqlCommand(" SELECT C.nom, C.age, C.sexe, C.prix, R.description, C.photo " +
-                                                            " FROM CHEVAUX C INNER JOIN RACE R ON R.ID = C.IDRace " +
+                using (SqlCommand sqlcmd = new SqlCommand(" SELECT C.nom, C.age, C.sexe, C.prix, C.race, C.photoguid " +
+                                                            " FROM CHEVAUX C " +
                                                             " where C.id =" + ID))
                 {
                     // affecter l'objet de connection à l'objet de requête
@@ -613,8 +583,8 @@ namespace SqlExpressUtilities
                         unTableau[0] = reader.GetString(0);
                         unTableau[1] = reader.GetInt32(1).ToString();
                         unTableau[2] = reader.GetString(2);
-                        unTableau[3] = reader.GetString(3);
-                        unTableau[4] = reader.GetInt32(4).ToString();
+                        unTableau[3] = reader.GetInt32(3).ToString();
+                        unTableau[4] = reader.GetString(4);
                         unTableau[5] = reader.GetString(5);
                     }
                     EndQuerySQL();

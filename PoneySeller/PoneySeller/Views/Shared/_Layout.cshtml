@@ -49,7 +49,7 @@
                         string[,] tab = GetChevaux();
                         if (tab.Length > 0)
                         {
-                            for (int i = 0; i < tab.Length; i++)
+                            for (int i = 0; i < tab.Length -1; i++)
                             {
                                 <li>@Html.ActionLink(tab[i, 0], "Gestion", "Gestion", new { _idcheval = tab[i, 1] }, new { @id = "cheval" + i, @value = tab[i,0] })</li>
                             }

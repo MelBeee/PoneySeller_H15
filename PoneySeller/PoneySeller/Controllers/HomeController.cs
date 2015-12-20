@@ -152,9 +152,8 @@ namespace PoneySeller.Controllers
             
             if (inscriptionreussite && TextBoxRempli)
             {
-                int dernierid = desUsagers.GetDernierID("usagers") + 1;
-                string sqlcommand = "insert into usagers (id, nomcomplet, password, adresse, ville, telephone, email) values (" 
-                                  + dernierid.ToString() + ", '" + TB_FullName + "','" + TB_Password + "','" + TB_Adresse 
+                string sqlcommand = "insert into usagers (nomcomplet, password, adresse, ville, telephone, email) values (" 
+                                  + "'" + TB_FullName + "','" + TB_Password + "','" + TB_Adresse 
                                   + "','" + TB_Ville + "','" + TB_Telephone + "','" + TB_Email + "')";
                 if (desUsagers.ExecuteCommandIntReturn(sqlcommand) > 0)
                 {

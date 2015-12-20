@@ -9,13 +9,11 @@ namespace PoneySeller.Models
     public class User
     {
         int ID { get; set; }
-
         public string Email { get; set; }
         public string Adresse { get; set; }
         public string Ville { get; set; }
         public string Telephone { get; set; }
         public string Password { get; set; }
-        
         public string NomComplet { get; set; }
 
         public User() { }

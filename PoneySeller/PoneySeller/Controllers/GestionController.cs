@@ -7,12 +7,8 @@ using System.Web.Mvc;
 
 namespace PoneySeller.Controllers
 {
-    
-
     public class GestionController : Controller
     {
-       
-
         [HttpPost]
         public ActionResult Profil(String TB_Fullname, String TB_Adresse, String TB_Ville, String TB_Telephone, String TB_Password, String TB_PasswordConfirm)
         {
@@ -33,7 +29,7 @@ namespace PoneySeller.Controllers
 
                 desUsagers.Update();
 
-                ViewBag.UpdateSuccess = "Votre compte a été modifier";
+                ViewBag.UpdateSuccess = "Votre compte a été modifié";
             }
             else
             {
@@ -48,9 +44,9 @@ namespace PoneySeller.Controllers
             {
                 PoneySeller.Models.Users desUsagers = new PoneySeller.Models.Users(Session["MyPonies"]);
                 desUsagers.SQLTableName = "Usagers";
-           
-                desUsagers.SelectByFieldName("Email", Session["Username"].ToString());     
-          
+
+                desUsagers.SelectByFieldName("Email", Session["Username"].ToString());
+
                 desUsagers.Next();
 
                 ModelState.SetModelValue("TB_Fullname", new ValueProviderResult(desUsagers.usager.NomComplet, string.Empty, new CultureInfo("en-US")));
@@ -65,9 +61,8 @@ namespace PoneySeller.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return View(new PoneySeller.Models.Jumbotron());           
+            return View(new PoneySeller.Models.Jumbotron());
         }
-
 
         public ActionResult Gestion(int? _idcheval)
         {
@@ -91,12 +86,8 @@ namespace PoneySeller.Controllers
                 ModelState.SetModelValue("TB_Age", new ValueProviderResult(InfoCheval[1], string.Empty, new CultureInfo("en-US")));
                 ModelState.SetModelValue("RB_Sexe", new ValueProviderResult(InfoCheval[2], string.Empty, new CultureInfo("en-US")));
                 ModelState.SetModelValue("TB_Prix", new ValueProviderResult(InfoCheval[3], string.Empty, new CultureInfo("en-US")));
-                ModelState.SetModelValue("RB_Race", new ValueProviderResult(InfoCheval[4], string.Empty, new CultureInfo("en-US")));
-                ViewBag.Image1 = "BasePicture.png";
-                if (InfoCheval[5] != "")
-                {
-                    ViewBag.Image1 = InfoCheval[5];
-                }
+                ModelState.SetModelValue("TB_Race", new ValueProviderResult(InfoCheval[4], string.Empty, new CultureInfo("en-US")));
+                ViewBag.Image1 = InfoCheval[5];
             }
             else
             {
@@ -107,46 +98,65 @@ namespace PoneySeller.Controllers
 
         [HttpPost]
         public ActionResult Gestion(String TB_Nom, String TB_Age, String RB_Sexe, String TB_Prix, HttpPostedFileBase FileUpload1, String TB_Update, String TB_IDCheval,
-                                    String CB_Discipline, String TB_Race)
+                                    String CB_Discipline, String TB_Race, String btn)
         {
-            if (TB_Nom != "" && TB_Age != "" && RB_Sexe != "" && TB_Prix != "" && CB_Discipline != "" && TB_Race != "")
+            if (btn == "Enregistrer")
             {
-                string commandesql = "";
-                if (TB_Update == "non")
+                if (TB_Nom != "" && TB_Age != "" && RB_Sexe != "" && TB_Prix != "" && CB_Discipline != "" && TB_Race != "")
                 {
-                    PoneySeller.Models.Users desUsagers = new PoneySeller.Models.Users(Session["MyPonies"]);
-                    int IDProprio = desUsagers.GetID(Session["Username"].ToString());
-                    commandesql = "insert into chevaux (nom, race, prix, sexe, idproprio, photoguid) values ( '" + TB_Nom + "', '" + TB_Race + "', '" + TB_Prix + "', '" + RB_Sexe + "', " + IDProprio + ", '" + FileUpload1.FileName.ToString() + "')";
-                    if (ExecuteCommande(commandesql) > 0)
+                    string commandesql = "";
+                    if (TB_Update == "non")
                     {
-                        ViewBag.Reussi = "Cheval ajouté !";
+                        PoneySeller.Models.Users desUsagers = new PoneySeller.Models.Users(Session["MyPonies"]);
+                        int IDProprio = desUsagers.GetID(Session["Username"].ToString());
+                        commandesql = "insert into chevaux (nom, age, race, prix, sexe, idproprio, photoguid) values ( '" + TB_Nom + "'," + TB_Age + ",'" + TB_Race + "', " + TB_Prix + ", '" + RB_Sexe + "', " + IDProprio + ", '" + FileUpload1.FileName.ToString() + "')";
+                        if (ExecuteCommande(commandesql) > 0)
+                        {
+                            ViewBag.Reussi = "Cheval ajouté !";
+                        }
+                        else
+                        {
+                            ViewBag.NonReussi = "Erreur dans l'enregistrement du cheval !";
+                        }
                     }
-                    else
+                    else if (TB_Update == "oui")
                     {
-                        ViewBag.NonReussi = "Erreur dans l'enregistrement du cheval !";
+                        commandesql = "update chevaux set nom = '" + TB_Nom.ToString() + "', " +
+                                                         "race = '" + TB_Race.ToString() + "', " +
+                                                         "age = " + TB_Age.ToString() + ", " +
+                                                         "prix = '" + TB_Prix.ToString() + "', " +
+                                                         "sexe = '" + RB_Sexe.ToString() + "', " +
+                                                         "photoguid = '" + FileUpload1.FileName.ToString() + "' " +
+                                                         "where ID = " + TB_IDCheval;
+
+                        if (ExecuteCommande(commandesql) > 0)
+                        {
+                            ViewBag.Reussi = "Cheval Modifié !";
+                        }
+                        else
+                        {
+                            ViewBag.NonReussi = "Erreur dans la modifcation du cheval !";
+                        }
                     }
                 }
                 else
                 {
-                    commandesql = "update chevaux set nom = '"      + TB_Nom    + "', " +
-                                                     "race = '"   + TB_Race   + "', " +
-                                                     "prix = '"     + TB_Prix   + "', " +
-                                                     "sexe = '"     + RB_Sexe   + "'" + 
-                                                     "where ID = " + TB_IDCheval;
-                    if (ExecuteCommande(commandesql) > 0)
-                    {
-                        ViewBag.Reussi = "Cheval Modifié !";
-                    }
-                    else
-                    {
-                        ViewBag.NonReussi = "Erreur dans la modifcation du cheval !";
-                    }
+                    ViewBag.ErreurVide = "Tout les champs doivent être remplis et au moins une photo doit être choisi.";
                 }
             }
-            else
+            else if (btn == "Supprimer")
             {
-                ViewBag.ErreurVide = "Tout les champs doivent être remplis et au moins une photo doit être choisi.";
+                string commandesql = "DELETE from Chevaux where id = " + TB_IDCheval;
+                if (ExecuteCommande(commandesql) > 0)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ViewBag.NonReussi = "Erreur dans la suppression du cheval !";
+                }
             }
+
 
             return View(new PoneySeller.Models.Jumbotron());
         }

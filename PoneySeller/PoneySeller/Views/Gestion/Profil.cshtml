@@ -29,21 +29,39 @@
                                 {
                                     <label style="color: red; font-size: 15px;">@ViewBag.NonReussi</label>
                                 }
+                                <section id="profil" style="padding: 0px">
+                                    <h1 style="text-align:center; font-size:20px;">Nom Complet</h1>
+                                </section>
                                 <div class="form-group">
                                     @Html.TextBox("TB_Fullname", null, new { maxlength = 50, @class = "form-control", @placeholder = "Nom complet" })
                                 </div>
+                                <section id="profil" style="padding: 0px">
+                                    <h1 style="text-align:center; font-size:20px;">Adresse</h1>
+                                </section>
                                 <div class="form-group">
                                     @Html.TextBox("TB_Adresse", null, new { maxlength = 50, @class = "form-control", @placeholder = "Adresse" })
                                 </div>
+                                <section id="profil" style="padding: 0px">
+                                    <h1 style="text-align:center; font-size:20px;">Ville</h1>
+                                </section>
                                 <div class="form-group">
                                     @Html.TextBox("TB_Ville", null, new { maxlength = 20, @class = "form-control", @placeholder = "Ville" })
                                 </div>
+                                <section id="profil" style="padding: 0px">
+                                    <h1 style="text-align:center; font-size:20px;">Téléphone</h1>
+                                </section>
                                 <div class="form-group">
                                     @Html.TextBox("TB_Telephone", null, new { maxlength = 15, @class = "form-control", @placeholder = "Telephone" })
                                 </div>
+                                <section id="profil" style="padding: 0px">
+                                    <h1 style="text-align:center; font-size:20px;">Mot de passe</h1>
+                                </section>
                                 <div class="form-group">
                                     @Html.TextBox("TB_Password", null, new { maxlength = 20, @class = "form-control", @placeholder = "Mot de passe", @Type = "password" })
                                 </div>
+                                <section id="profil" style="padding: 0px">
+                                    <h1 style="text-align:center; font-size:20px;">Confirmation Mot de Passe</h1>
+                                </section>
                                 <div class="form-group">
                                     @Html.TextBox("TB_PasswordConfirm", null, new { maxlength = 20, @class = "form-control", @placeholder = "Confirmation du mot de passe", @Type = "password" })
                                 </div>                              
